@@ -50,4 +50,10 @@ public class Card {
      * Состояние: 0 - не выучено, 1 - выучено
      */
     private int status;
+
+    public Card(int id) {
+        this.id = id;
+        this.editDateTime = LocalDateTime.now();
+        this.status = 0;
+    }
 }

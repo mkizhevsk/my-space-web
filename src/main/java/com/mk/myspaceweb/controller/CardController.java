@@ -1,5 +1,6 @@
 package com.mk.myspaceweb.controller;
 
+import com.mk.myspaceweb.data.entity.Card;
 import com.mk.myspaceweb.service.CardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -28,6 +29,14 @@ public class CardController {
         model.addAttribute("cards", cardService.getCards());
 
         return "index";
+    }
+
+    @GetMapping("/addCard")
+    public String addCard(Model model) {
+
+        model.addAttribute("card", new Card(0));
+
+        return "card-form";
     }
 
 }
