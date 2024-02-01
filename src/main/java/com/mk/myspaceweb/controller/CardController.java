@@ -1,5 +1,6 @@
 package com.mk.myspaceweb.controller;
 
+import com.mk.myspaceweb.service.CardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,6 +14,8 @@ import java.time.LocalDate;
 @RequiredArgsConstructor
 public class CardController {
 
+    private final CardService cardService;
+
     @RequestMapping("/")
     public String index(Principal principal) {
         System.out.println("log in: " + LocalDate.now());
@@ -22,6 +25,7 @@ public class CardController {
     @GetMapping("index")
     public String list(Model model) {
 
+        model.addAttribute("cards", cardService.getCards());
 
         return "index";
     }
