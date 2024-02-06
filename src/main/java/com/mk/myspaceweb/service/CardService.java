@@ -21,7 +21,7 @@ public class CardService {
     }
 
     public void saveCard(Card card) {
-        System.out.println(card.getInternalCode());
+
         if(ObjectUtils.isEmpty(card.getInternalCode()))
             card.setInternalCode(StringRandomGenerator.getInstance().getValue());
 
