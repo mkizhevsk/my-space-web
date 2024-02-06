@@ -1,7 +1,6 @@
 package com.mk.myspaceweb.data.entity;
 
 import lombok.*;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -28,7 +27,8 @@ public class Card {
     /**
      * Дата и время редактирования
      */
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSZ")
+    //@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss.SSSZ")
+    @Column(name = "edit_date_time")
     private LocalDateTime editDateTime;
 
     /**

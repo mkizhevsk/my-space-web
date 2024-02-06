@@ -25,6 +25,7 @@
         <form th:action="@{/saveCard}" th:object="${card}" method="post">
 
           <input type="hidden" th:field="*{id}"/>
+          <input type="hidden" th:field="*{internalCode}"/>
           <input type="hidden" th:field="*{editDateTime}"/>
 
           <div class="form-group">

@@ -5,8 +5,7 @@ import com.mk.myspaceweb.service.CardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.time.LocalDate;
@@ -37,6 +36,31 @@ public class CardController {
         model.addAttribute("card", new Card(0));
 
         return "card-form";
+    }
+
+    @GetMapping("/updateCard/{cardId}")
+    public String updateCustomer(@PathVariable int cardId, Model model) {
+
+        var card = cardService.getCard(cardId);
+        model.addAttribute("card", card);
+
+        return "card-form";
+    }
+
+    @PostMapping("/saveCard")
+    public String saveCard(@ModelAttribute Card card) {
+
+        cardService.saveCard(card);
+
+        return "redirect:/index";
+    }
+
+    @GetMapping("/deleteCard/{cardId}")
+    public String deleteContact(@PathVariable int cardId) {
+
+        cardService.deleteCard(cardId);
+
+        return "redirect:/index";
     }
 
 }
