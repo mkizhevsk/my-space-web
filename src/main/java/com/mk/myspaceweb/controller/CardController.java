@@ -3,6 +3,8 @@ package com.mk.myspaceweb.controller;
 import com.mk.myspaceweb.data.entity.Card;
 import com.mk.myspaceweb.service.CardService;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -15,6 +17,8 @@ import java.time.LocalDate;
 public class CardController {
 
     private final CardService cardService;
+
+    private final Logger logger = LoggerFactory.getLogger(CardController.class);
 
     @RequestMapping("/")
     public String index(Principal principal) {
