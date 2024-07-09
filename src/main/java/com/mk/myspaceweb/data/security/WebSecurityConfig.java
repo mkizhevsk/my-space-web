@@ -6,16 +6,16 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 import javax.sql.DataSource;
 
-import static org.springframework.security.config.Customizer.withDefaults;
-
 @Configuration
 @EnableWebSecurity
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+public class WebSecurityConfig {
 
     private DataSource securityDataSource;
 
@@ -24,26 +24,33 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         this.securityDataSource = securityDataSource;
     }
 
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.jdbcAuthentication().dataSource(securityDataSource);
+    @Bean
+    public UserDetailsService userDetailsService() {
+        return new JdbcUserDetailsManager(securityDataSource);
     }
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .authorizeRequests()
-                .antMatchers("/admin/**").hasRole("ADMIN")
-                .anyRequest().authenticated();
-        http
-                .formLogin()
-                .loginPage("/login")
-                .defaultSuccessUrl("/index")
-                .permitAll()
-                .and()
-                .csrf().disable()
-                .logout().permitAll()
-                .and()
-                .exceptionHandling().accessDeniedPage("/admin/access-denied");
+                .authorizeHttpRequests((requests) -> requests
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .anyRequest().authenticated()
+                )
+                .formLogin((form) -> form
+                        .loginPage("/login")
+                        .defaultSuccessUrl("/index")
+                        .permitAll()
+                )
+                .csrf(AbstractHttpConfigurer::disable)
+                .logout((logout) -> logout.permitAll())
+                .exceptionHandling((exceptions) -> exceptions
+                        .accessDeniedPage("/admin/access-denied")
+                );
+        return http.build();
+    }
+
+    @Autowired
+    public void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.jdbcAuthentication().dataSource(securityDataSource);
     }
 }

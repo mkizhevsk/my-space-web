@@ -1,0 +1,1 @@
+ALTER TABLE card ADD COLUMN deleted tinyint(1) DEFAULT false;

@@ -1,8 +1,8 @@
 package com.mk.myspaceweb.data.entity;
 
+import jakarta.persistence.*;
 import lombok.*;
 
-import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Getter
@@ -50,6 +50,11 @@ public class Card {
      * Состояние: 0 - не выучено, 1 - выучено
      */
     private int status;
+
+    /**
+     * Признак удаления
+     */
+    private boolean deleted;
 
     public Card(int id) {
         this.id = id;
