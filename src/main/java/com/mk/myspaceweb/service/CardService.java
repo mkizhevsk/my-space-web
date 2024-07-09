@@ -9,6 +9,7 @@ import org.springframework.util.ObjectUtils;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -17,7 +18,10 @@ public class CardService {
     private final CardRepository cardRepository;
 
     public List<Card> getCards() {
-        return cardRepository.getCards();
+        var cards = cardRepository.getCards();
+        return cards.stream()
+                .filter(card -> !card.isDeleted())
+                .collect(Collectors.toList());
     }
 
     public void saveCard(Card card) {
@@ -35,10 +39,8 @@ public class CardService {
     }
 
     public void deleteCard(int cardId) {
-        try {
-            cardRepository.deleteById(cardId);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        var card = getCard(cardId);
+        card.setDeleted(true);
+        saveCard(card);
     }
 }
