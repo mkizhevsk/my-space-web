@@ -30,7 +30,7 @@ public class WebSecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, CustomOAuth2AuthenticationSuccessHandler customOAuth2AuthenticationSuccessHandler) throws Exception {
         http
                 .authorizeHttpRequests((requests) -> requests
                         .requestMatchers("/admin/**").hasRole("ADMIN")
@@ -40,6 +40,11 @@ public class WebSecurityConfig {
                         .loginPage("/login")
                         .defaultSuccessUrl("/index")
                         .permitAll()
+                )
+                .oauth2Login(oauth2 -> oauth2
+                        .loginPage("/login")
+                        .successHandler(customOAuth2AuthenticationSuccessHandler)
+
                 )
                 .csrf(AbstractHttpConfigurer::disable)
                 .logout((logout) -> logout.permitAll())
