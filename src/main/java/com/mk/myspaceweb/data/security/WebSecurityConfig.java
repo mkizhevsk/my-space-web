@@ -7,8 +7,6 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 import javax.sql.DataSource;
@@ -24,10 +22,10 @@ public class WebSecurityConfig {
         this.securityDataSource = securityDataSource;
     }
 
-    @Bean
-    public UserDetailsService userDetailsService() {
-        return new JdbcUserDetailsManager(securityDataSource);
-    }
+//    @Bean
+//    public UserDetailsService userDetailsService() {
+//        return new JdbcUserDetailsManager(securityDataSource);
+//    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, CustomOAuth2AuthenticationSuccessHandler customOAuth2AuthenticationSuccessHandler) throws Exception {
