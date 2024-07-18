@@ -69,20 +69,7 @@ public class UserService {
 
     @Transactional
     public void deleteUser(String username) {
-        System.out.println(username);
-        var user = userRepository.findByUsername(username);
-        if (user != null) {
-            System.out.println(user.getUsername() + " " + user.getAuthorities().size());
-            for (Authority authority : user.getAuthorities()) {
-                authorityRepository.delete(authority);
-            }
-            try {
-                userRepository.delete(user);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-        }
+        userRepository.deleteById(username);
     }
 
     private void removeNoopPrefix(User user) {
