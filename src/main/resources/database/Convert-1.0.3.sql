@@ -1,0 +1,6 @@
+CREATE TABLE refresh_tokens (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(255) NOT NULL,
+    token VARCHAR(2000) NOT NULL,
+    expiry_date DATETIME NOT NULL
+);
