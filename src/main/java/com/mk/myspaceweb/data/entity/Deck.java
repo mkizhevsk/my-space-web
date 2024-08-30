@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -11,12 +12,17 @@ import java.time.LocalDateTime;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "card")
-public class Card {
+@Table(name = "deck")
+public class Deck {
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private  int id;
+
+    /**
+     * Название колоды кард
+     */
+    private String name;
 
     /**
      * Уникальный код для синхронизации
@@ -31,33 +37,21 @@ public class Card {
     private LocalDateTime editDateTime;
 
     /**
-     * Лицевая сторона карты
+     * Потребитель
      */
-    private String front;
-
-    /**
-     * Обратная сторона карты
-     */
-    private String back;
-
-    /**
-     * Пример
-     */
-    private String example;
-
-    /**
-     * Состояние: 0 - не выучено, 1 - выучено
-     */
-    private int status;
+    @OneToOne(fetch= FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE,CascadeType.DETACH, CascadeType.REFRESH})
+    @JoinColumn(name="username")
+    private User user;
 
     /**
      * Признак удаления
      */
     private boolean deleted;
 
-    public Card(int id) {
-        this.id = id;
-        this.editDateTime = LocalDateTime.now();
-        this.status = 0;
-    }
+    /**
+     * Карты
+     */
+    @OneToMany(fetch= FetchType.LAZY, cascade= CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name="deck_id")
+    private List<Card> cards;
 }
