@@ -21,7 +21,7 @@ public class UserController {
     public String getAllUsers(Model model) {
         List<User> users = userService.getAllUsers();
         model.addAttribute("users", users);
-        return "users/list";
+        return "user/list";
     }
 
     @GetMapping("/test")
@@ -33,7 +33,7 @@ public class UserController {
     @GetMapping("/create")
     public String showCreateForm(Model model) {
         model.addAttribute("user", new User());
-        return "users/create";
+        return "user/create";
     }
 
     @PostMapping("/create")
@@ -47,7 +47,7 @@ public class UserController {
         Optional<User> user = userService.getUserByUsername(username);
         if (user.isPresent()) {
             model.addAttribute("user", user.get());
-            return "users/edit";
+            return "user/edit";
         } else {
             return "redirect:/users";
         }

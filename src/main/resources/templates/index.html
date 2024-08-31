@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
     <head>
-        <title>My-space</title>
+        <title>Deck list</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta charset="UTF-8">
 
@@ -44,42 +44,33 @@
         </nav>
 
         <div class="row">
-            <h1 class="main">Card list</h1>
+            <h1 class="main">Deck list</h1>
         </div>
 
         <div class="row">
             <div class="list-with-add">
                 <button type='button' class='btn btn-secondary add'
-                        onclick="window.location.href='/addCard';">Add card</button>
+                        onclick="window.location.href='/addCard';">Add deck</button>
 
                 <table class="table">
                     <tbody>
                     <tr>
-                        <td><b>Front</b></td>
-                        <td><b>Back</b></td>
-                        <td><b>Example</b></td>
-                        <td><b>Status</b></td>
+                        <td><b>Name</b></td>
                         <td></td>
                     </tr>
 
-                    <th:block th:each="tempCard : ${cards}">
+                    <th:block th:each="tempDeck : ${decks}">
                         <tr>
-                            <td th:text="${tempCard.front}"></td>
-
-                            <td th:text="${tempCard.back}"></td>
-
-                            <td th:text="${tempCard.example}"></td>
-
-                            <td th:text="${tempCard.status}"></td>
+                            <td th:text="${tempDeck.name}"></td>
 
                             <td>
                                 <div class='dropdown'>
                                     <button class='btn btn-light'>...</button>
                                     <div class='dropdown-content'>
-                                        <a th:href="@{'/updateCard/' + ${tempCard.id}}">update</a>
+                                        <a th:href="@{'/updateDeck/' + ${tempDeck.id}}">update</a>
 
-                                        <a th:href="@{'/deleteCard/' + ${tempCard.id}}"
-                                        onclick="if (!(confirm('Delete card?'))) return false">delete</a>
+                                        <a th:href="@{'/deleteDeck/' + ${tempDeck.id}}"
+                                        onclick="if (!(confirm('Delete deck?'))) return false">delete</a>
                                     </div>
                                 </div>
                             </td>

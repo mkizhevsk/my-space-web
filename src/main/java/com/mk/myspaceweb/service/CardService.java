@@ -1,7 +1,9 @@
 package com.mk.myspaceweb.service;
 
 import com.mk.myspaceweb.data.entity.Card;
+import com.mk.myspaceweb.data.entity.Deck;
 import com.mk.myspaceweb.data.repository.CardRepository;
+import com.mk.myspaceweb.data.repository.DeckRepository;
 import com.mk.myspaceweb.utils.StringRandomGenerator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,10 +17,15 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CardService {
 
+    private final DeckRepository deckRepository;
     private final CardRepository cardRepository;
 
-    public List<Card> getCards() {
-        var cards = cardRepository.getCards();
+    public List<Deck> getDecksByUser(String username) {
+        return deckRepository.getDecksByUser(username);
+    }
+
+    public List<Card> getCardsByDeck(int deckId) {
+        var cards = cardRepository.getCardsByDeck(deckId);
         return cards.stream()
                 .filter(card -> !card.isDeleted())
                 .collect(Collectors.toList());
@@ -43,4 +50,5 @@ public class CardService {
         card.setDeleted(true);
         saveCard(card);
     }
+
 }

@@ -9,29 +9,21 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
-import java.time.LocalDate;
-
 @Controller
 @RequiredArgsConstructor
+@RequestMapping("/cards")
 public class CardController {
 
     private final CardService cardService;
 
     private final Logger logger = LoggerFactory.getLogger(CardController.class);
 
-    @RequestMapping("/")
-    public String index(Principal principal) {
-        System.out.println("log in: " + LocalDate.now());
-        return "redirect:/index";
-    }
+    @GetMapping("/list/{deckId}")
+    public String list(@PathVariable int deckId, Model model) {
 
-    @GetMapping("index")
-    public String list(Model model) {
+        model.addAttribute("cards", cardService.getCardsByDeck(deckId));
 
-        model.addAttribute("cards", cardService.getCards());
-
-        return "index";
+        return "";
     }
 
     @GetMapping("/addCard")
