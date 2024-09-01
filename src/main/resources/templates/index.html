@@ -61,7 +61,9 @@
 
                     <th:block th:each="tempDeck : ${decks}">
                         <tr>
-                            <td th:text="${tempDeck.name}"></td>
+                            <td class="menu-link">
+                                <a th:text="${tempDeck.name}" th:href="@{'/cards/list/' + ${tempDeck.id}}"></a>
+                            </td>
 
                             <td>
                                 <div class='dropdown'>

@@ -42,12 +42,13 @@ select.hidden {
 .menu-link a:link,
         a:visited {
     text-decoration: none;
-    color: #64676a;
+    color: #000000
 }
-a.menu-link:hover,
-       active {
+
+.menu-link a:hover,
+        a:active {
     text-decoration: underline;
-    color: #64676a;
+    color: #000000
 }
 
 .library-link a:link,

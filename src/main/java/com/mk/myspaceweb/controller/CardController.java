@@ -23,7 +23,7 @@ public class CardController {
 
         model.addAttribute("cards", cardService.getCardsByDeck(deckId));
 
-        return "";
+        return "card/card-list";
     }
 
     @GetMapping("/addCard")
@@ -31,7 +31,7 @@ public class CardController {
 
         model.addAttribute("card", new Card(0));
 
-        return "card-form";
+        return "card/card-form";
     }
 
     @GetMapping("/updateCard/{cardId}")
@@ -40,7 +40,7 @@ public class CardController {
         var card = cardService.getCard(cardId);
         model.addAttribute("card", card);
 
-        return "card-form";
+        return "card/card-form";
     }
 
     @PostMapping("/saveCard")
