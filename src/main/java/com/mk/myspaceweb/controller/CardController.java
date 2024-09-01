@@ -21,21 +21,23 @@ public class CardController {
     @GetMapping("/list/{deckId}")
     public String list(@PathVariable int deckId, Model model) {
 
+        model.addAttribute("deck", cardService.getDeck(deckId));
         model.addAttribute("cards", cardService.getCardsByDeck(deckId));
 
         return "card/card-list";
     }
 
-    @GetMapping("/addCard")
-    public String addCard(Model model) {
+    @GetMapping("/addCard/{deckId}")
+    public String addCard(@PathVariable int deckId, Model model) {
 
+        model.addAttribute("deck", cardService.getDeck(deckId));
         model.addAttribute("card", new Card(0));
 
         return "card/card-form";
     }
 
-    @GetMapping("/updateCard/{cardId}")
-    public String updateCustomer(@PathVariable int cardId, Model model) {
+    @GetMapping("/updateCard/{deckId}/{cardId}")
+    public String updateCustomer(@PathVariable int deckId, @PathVariable int cardId, Model model) {
 
         var card = cardService.getCard(cardId);
         model.addAttribute("card", card);
@@ -43,16 +45,16 @@ public class CardController {
         return "card/card-form";
     }
 
-    @PostMapping("/saveCard")
-    public String saveCard(@ModelAttribute Card card) {
+    @PostMapping("/saveCard/{deckId}")
+    public String saveCard(@PathVariable int deckId, @ModelAttribute Card card) {
 
         cardService.saveCard(card);
 
         return "redirect:/index";
     }
 
-    @GetMapping("/deleteCard/{cardId}")
-    public String deleteContact(@PathVariable int cardId) {
+    @GetMapping("/deleteCard/{deckId}/{cardId}")
+    public String deleteContact(@PathVariable int deckId, @PathVariable int cardId) {
 
         cardService.deleteCard(cardId);
 

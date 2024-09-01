@@ -20,6 +20,10 @@ public class CardService {
     private final DeckRepository deckRepository;
     private final CardRepository cardRepository;
 
+    public Object getDeck(int deckId) {
+        return deckRepository.findById(deckId).orElse(null);
+    }
+
     public List<Deck> getDecksByUser(String username) {
         return deckRepository.getDecksByUser(username);
     }
@@ -50,5 +54,6 @@ public class CardService {
         card.setDeleted(true);
         saveCard(card);
     }
+
 
 }

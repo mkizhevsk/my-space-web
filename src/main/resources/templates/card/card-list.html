@@ -44,13 +44,14 @@
     </nav>
 
     <div class="row">
-        <h1 class="main">Card list</h1>
+        <h1 class="main"
+            th:text="${deck.name}"></h1>
     </div>
 
     <div class="row">
         <div class="list-with-add">
             <button type='button' class='btn btn-secondary add'
-                    onclick="window.location.href='/addCard';">Add card</button>
+                    th:onclick="'window.location.href=\'/cards/addCard/' + ${deck.id} + '\';'">Add card</button>
 
             <table class="table">
                 <tbody>
@@ -76,9 +77,9 @@
                             <div class='dropdown'>
                                 <button class='btn btn-light'>...</button>
                                 <div class='dropdown-content'>
-                                    <a th:href="@{'/updateCard/' + ${tempCard.id}}">update</a>
+                                    <a th:href="@{'/cards/updateCard/' + ${tempCard.id}}">update</a>
 
-                                    <a th:href="@{'/deleteCard/' + ${tempCard.id}}"
+                                    <a th:href="@{'/cards/deleteCard/' + ${tempCard.id}}"
                                        onclick="if (!(confirm('Delete card?'))) return false">delete</a>
                                 </div>
                             </div>
@@ -87,6 +88,10 @@
                 </th:block>
                 </tbody>
             </table>
+
+            <div>
+                <a th:href="@{/index}">Back</a>
+            </div>
         </div>
     </div>
     <br><br><br><br>

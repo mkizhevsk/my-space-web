@@ -22,7 +22,7 @@
       <div class="col-6">
         <h2 class='form-header'>Card</h2>
 
-        <form th:action="@{/saveCard}" th:object="${card}" method="post">
+        <form th:action="@{'/cards/saveCard' + ${deck.id}}" th:object="${card}" method="post">
 
           <input type="hidden" th:field="*{id}"/>
           <input type="hidden" th:field="*{internalCode}"/>
@@ -51,8 +51,12 @@
             </select>
           </div>
 
-          <button type="submit" class="btn btn-success">Save</button>
+          <button style="margin-top: 15px; width: 130px;" type="submit" class="btn btn-success">Save</button>
         </form>
+
+        <div style="margin-top: 30px">
+          <a th:href="@{'/cards/list/' + ${deck.id}}">Back</a>
+        </div>
       </div>
 
       <div class="col"></div>
