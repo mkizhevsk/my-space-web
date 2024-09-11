@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -54,5 +55,11 @@ public class Deck {
     @OneToMany(fetch= FetchType.LAZY, cascade= CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name="deck_id")
     private List<Card> cards;
+
+    public void addCard(Card card) {
+        if (this.cards == null)
+            this.cards = new ArrayList<>();
+        this.cards.add(card);
+    }
 
 }

@@ -22,11 +22,9 @@
       <div class="col-6">
         <h2 class='form-header'>Card</h2>
 
-        <form th:action="@{'/cards/saveCard' + ${deck.id}}" th:object="${card}" method="post">
+        <form th:action="@{'/cards/saveCard/' + ${deck.id}}" th:object="${cardDto}" method="post">
 
-          <input type="hidden" th:field="*{id}"/>
-          <input type="hidden" th:field="*{internalCode}"/>
-          <input type="hidden" th:field="*{editDateTime}"/>
+          <input type="hidden" th:field="*{cardId}"/>
 
           <div class="form-group">
             <label for="inputFront">Front</label>

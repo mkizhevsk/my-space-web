@@ -1,6 +1,6 @@
 package com.mk.myspaceweb.controller;
 
-import com.mk.myspaceweb.data.entity.Card;
+import com.mk.myspaceweb.data.dto.CardDto;
 import com.mk.myspaceweb.service.CardService;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 @RequiredArgsConstructor
@@ -31,7 +32,7 @@ public class CardController {
     public String addCard(@PathVariable int deckId, Model model) {
 
         model.addAttribute("deck", cardService.getDeck(deckId));
-        model.addAttribute("card", new Card(0));
+        model.addAttribute("cardDto", new CardDto(0));
 
         return "card/card-form";
     }
@@ -39,18 +40,19 @@ public class CardController {
     @GetMapping("/updateCard/{deckId}/{cardId}")
     public String updateCustomer(@PathVariable int deckId, @PathVariable int cardId, Model model) {
 
-        var card = cardService.getCard(cardId);
-        model.addAttribute("card", card);
+        model.addAttribute("deck", cardService.getDeck(deckId));
+        model.addAttribute("cardDto", cardService.getCardDto(cardId));
 
         return "card/card-form";
     }
 
     @PostMapping("/saveCard/{deckId}")
-    public String saveCard(@PathVariable int deckId, @ModelAttribute Card card) {
+    public String saveCard(@PathVariable int deckId, @ModelAttribute CardDto cardDto, RedirectAttributes redirectAttributes) {
 
-        cardService.saveCard(card);
+        cardService.saveCard(cardDto, deckId);
 
-        return "redirect:/index";
+        redirectAttributes.addAttribute("deckId", deckId);
+        return "redirect:/cards/list/{deckId}";
     }
 
     @GetMapping("/deleteCard/{deckId}/{cardId}")

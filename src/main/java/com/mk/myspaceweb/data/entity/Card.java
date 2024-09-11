@@ -55,9 +55,4 @@ public class Card {
      */
     private boolean deleted;
 
-    public Card(int id) {
-        this.id = id;
-        this.editDateTime = LocalDateTime.now();
-        this.status = 0;
-    }
 }

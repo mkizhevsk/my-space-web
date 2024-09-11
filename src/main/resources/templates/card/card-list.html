@@ -77,9 +77,9 @@
                             <div class='dropdown'>
                                 <button class='btn btn-light'>...</button>
                                 <div class='dropdown-content'>
-                                    <a th:href="@{'/cards/updateCard/' + ${tempCard.id}}">update</a>
+                                    <a th:href="@{'/cards/updateCard/' + ${deck.id} + '/' + ${tempCard.id}}">update</a>
 
-                                    <a th:href="@{'/cards/deleteCard/' + ${tempCard.id}}"
+                                    <a th:href="@{'/cards/deleteCard/' + ${deck.id} + '/' + ${tempCard.id}}"
                                        onclick="if (!(confirm('Delete card?'))) return false">delete</a>
                                 </div>
                             </div>

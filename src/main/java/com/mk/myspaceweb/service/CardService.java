@@ -1,5 +1,6 @@
 package com.mk.myspaceweb.service;
 
+import com.mk.myspaceweb.data.dto.CardDto;
 import com.mk.myspaceweb.data.dto.DeckDto;
 import com.mk.myspaceweb.data.entity.Card;
 import com.mk.myspaceweb.data.entity.Deck;
@@ -9,7 +10,6 @@ import com.mk.myspaceweb.data.repository.UserRepository;
 import com.mk.myspaceweb.utils.StringRandomGenerator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ObjectUtils;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -54,13 +54,25 @@ public class CardService {
                 .collect(Collectors.toList());
     }
 
-    public void saveCard(Card card) {
-        if(ObjectUtils.isEmpty(card.getInternalCode()))
-            card.setInternalCode(StringRandomGenerator.getInstance().getValue());
-
+    public void saveCard(CardDto cardDto, int deckId) {
+        Card card;
+        if (cardDto.getCardId() == 0) {
+            card = Card.builder()
+                    .internalCode(StringRandomGenerator.getInstance().getValue())
+                    .build();
+        } else {
+            card = getCard(cardDto.getCardId());
+        }
+        card.setFront(cardDto.getFront());
+        card.setBack(cardDto.getBack());
+        card.setExample(cardDto.getExample());
+        card.setStatus(cardDto.getStatus());
         card.setEditDateTime(LocalDateTime.now());
-
         cardRepository.save(card);
+
+        var deck = getDeck(deckId);
+        deck.addCard(card);
+        deckRepository.save(deck);
     }
 
     public Card getCard(int cardId) {
@@ -70,8 +82,18 @@ public class CardService {
     public void deleteCard(int cardId) {
         var card = getCard(cardId);
         card.setDeleted(true);
-        saveCard(card);
+        cardRepository.save(card);
     }
 
+    public CardDto getCardDto(int cardId) {
+        var card = getCard(cardId);
 
+        return CardDto.builder()
+                .cardId(cardId)
+                .front(card.getFront())
+                .back(card.getBack())
+                .example(card.getExample())
+                .status(card.getStatus())
+                .build();
+    }
 }
