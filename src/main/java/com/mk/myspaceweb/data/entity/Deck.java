@@ -54,4 +54,5 @@ public class Deck {
     @OneToMany(fetch= FetchType.LAZY, cascade= CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name="deck_id")
     private List<Card> cards;
+
 }

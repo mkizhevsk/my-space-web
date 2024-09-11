@@ -1,9 +1,11 @@
 package com.mk.myspaceweb.service;
 
+import com.mk.myspaceweb.data.dto.DeckDto;
 import com.mk.myspaceweb.data.entity.Card;
 import com.mk.myspaceweb.data.entity.Deck;
 import com.mk.myspaceweb.data.repository.CardRepository;
 import com.mk.myspaceweb.data.repository.DeckRepository;
+import com.mk.myspaceweb.data.repository.UserRepository;
 import com.mk.myspaceweb.utils.StringRandomGenerator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,13 +21,30 @@ public class CardService {
 
     private final DeckRepository deckRepository;
     private final CardRepository cardRepository;
+    private final UserRepository userRepository;
 
-    public Object getDeck(int deckId) {
+    public Deck getDeck(int deckId) {
         return deckRepository.findById(deckId).orElse(null);
     }
 
     public List<Deck> getDecksByUser(String username) {
         return deckRepository.getDecksByUser(username);
+    }
+
+    public void saveDeck(DeckDto deckDto, String username) {
+        Deck deck;
+        if (deckDto.getDeckId() == 0) {
+            deck = Deck.builder()
+                    .internalCode(StringRandomGenerator.getInstance().getValue())
+                    .user(userRepository.findByUsername(username))
+                    .build();
+        } else {
+            deck = getDeck(deckDto.getDeckId());
+        }
+        deck.setName(deckDto.getName());
+        deck.setEditDateTime(LocalDateTime.now());
+
+        deckRepository.save(deck);
     }
 
     public List<Card> getCardsByDeck(int deckId) {
@@ -36,7 +55,6 @@ public class CardService {
     }
 
     public void saveCard(Card card) {
-
         if(ObjectUtils.isEmpty(card.getInternalCode()))
             card.setInternalCode(StringRandomGenerator.getInstance().getValue());
 
