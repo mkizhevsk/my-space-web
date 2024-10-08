@@ -59,5 +59,11 @@ public class DeckController {
         return "redirect:/index";
     }
 
+    @GetMapping("/deleteDeck/{deckId}")
+    public String deleteContact(@PathVariable int deckId) {
 
+        cardService.deleteDeck(deckId);
+
+        return "redirect:/index";
+    }
 }

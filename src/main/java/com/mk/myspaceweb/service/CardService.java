@@ -23,12 +23,15 @@ public class CardService {
     private final CardRepository cardRepository;
     private final UserRepository userRepository;
 
+    // Deck
     public Deck getDeck(int deckId) {
         return deckRepository.findById(deckId).orElse(null);
     }
 
     public List<Deck> getDecksByUser(String username) {
-        return deckRepository.getDecksByUser(username);
+        return deckRepository.getDecksByUser(username).stream()
+                .filter(deck -> !deck.isDeleted())
+                .collect(Collectors.toList());
     }
 
     public void saveDeck(DeckDto deckDto, String username) {
@@ -47,6 +50,16 @@ public class CardService {
         deckRepository.save(deck);
     }
 
+    public void deleteDeck(int deckId) {
+        var deck = getDeck(deckId);
+        deck.setDeleted(true);
+
+        deck.getCards().forEach(card -> deleteCard(card.getId()));
+
+        deckRepository.save(deck);
+    }
+
+    // Card
     public List<Card> getCardsByDeck(int deckId) {
         var cards = cardRepository.getCardsByDeck(deckId);
         return cards.stream()
