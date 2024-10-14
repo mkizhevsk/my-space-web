@@ -11,8 +11,11 @@ import com.mk.myspaceweb.utils.StringRandomGenerator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 @Service
@@ -22,6 +25,8 @@ public class CardService {
     private final DeckRepository deckRepository;
     private final CardRepository cardRepository;
     private final UserRepository userRepository;
+
+    private final int DAYS_FOR_DELETION = 7;
 
     // Deck
     public Deck getDeck(int deckId) {
@@ -108,5 +113,29 @@ public class CardService {
                 .example(card.getExample())
                 .status(card.getStatus())
                 .build();
+    }
+
+    public record DeletionResult(int deletedDecks, int deletedCards) {}
+
+    public DeletionResult cleanDeletedEntities() {
+        var currentDate = LocalDate.now();
+        var deletedDecksCount = new AtomicInteger(0);
+        var deletedCardsCount = new AtomicInteger(0);
+
+        deckRepository.getDeletedDecks().stream()
+                .filter(deck -> ChronoUnit.DAYS.between(deck.getEditDateTime().toLocalDate(), currentDate) > DAYS_FOR_DELETION)
+                .forEach(deck -> {
+                    deckRepository.deleteById(deck.getId());
+                    deletedDecksCount.incrementAndGet();
+                });
+
+        cardRepository.getDeletedCards().stream()
+                .filter(deck -> ChronoUnit.DAYS.between(deck.getEditDateTime().toLocalDate(), currentDate) > DAYS_FOR_DELETION)
+                .forEach(deck -> {
+                    cardRepository.deleteById(deck.getId());
+                    deletedCardsCount.incrementAndGet();
+                });
+
+        return new DeletionResult(deletedDecksCount.get(), deletedCardsCount.get());
     }
 }
