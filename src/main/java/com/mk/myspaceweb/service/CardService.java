@@ -7,12 +7,12 @@ import com.mk.myspaceweb.data.entity.Deck;
 import com.mk.myspaceweb.data.repository.CardRepository;
 import com.mk.myspaceweb.data.repository.DeckRepository;
 import com.mk.myspaceweb.data.repository.UserRepository;
+import com.mk.myspaceweb.utils.DateUtil;
 import com.mk.myspaceweb.utils.StringRandomGenerator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -50,7 +50,7 @@ public class CardService {
             deck = getDeck(deckDto.getDeckId());
         }
         deck.setName(deckDto.getName());
-        deck.setEditDateTime(LocalDateTime.now());
+        deck.setEditDateTime(DateUtil.getCurrentUtcTime());
 
         deckRepository.save(deck);
     }
@@ -85,7 +85,7 @@ public class CardService {
         card.setBack(cardDto.getBack());
         card.setExample(cardDto.getExample());
         card.setStatus(cardDto.getStatus());
-        card.setEditDateTime(LocalDateTime.now());
+        card.setEditDateTime(DateUtil.getCurrentUtcTime());
         cardRepository.save(card);
 
         var deck = getDeck(deckId);
