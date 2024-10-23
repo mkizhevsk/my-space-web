@@ -53,6 +53,9 @@
             <button type='button' class='btn btn-secondary add'
                     th:onclick="'window.location.href=\'/cards/addCard/' + ${deck.id} + '\';'">Add card</button>
 
+            <button type='button' class='btn btn-secondary add'
+                    th:onclick="'window.location.href=\'/decks/exportPdf/' + ${deck.id} + '\';'">Export to PDF</button>
+
             <table class="table">
                 <tbody>
                 <tr>

@@ -9,6 +9,8 @@ import com.mk.myspaceweb.data.repository.DeckRepository;
 import com.mk.myspaceweb.data.repository.UserRepository;
 import com.mk.myspaceweb.utils.StringRandomGenerator;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -27,6 +29,8 @@ public class CardService {
     private final UserRepository userRepository;
 
     private final int DAYS_FOR_DELETION = 7;
+
+    private final Logger logger = LoggerFactory.getLogger(CardService.class);
 
     // Deck
     public Deck getDeck(int deckId) {
@@ -53,6 +57,7 @@ public class CardService {
         deck.setEditDateTime(LocalDateTime.now());
 
         deckRepository.save(deck);
+        logger.info("Deck was saved, name " + deck.getName());
     }
 
     public void deleteDeck(int deckId) {
