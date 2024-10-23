@@ -1,24 +1,22 @@
 package com.mk.myspaceweb.document;
 
+import com.itextpdf.text.*;
+import com.itextpdf.text.pdf.BaseFont;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
 import com.mk.myspaceweb.data.entity.Card;
 import com.mk.myspaceweb.data.entity.Deck;
-import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.PDPage;
-import org.apache.pdfbox.pdmodel.PDPageContentStream;
-import org.apache.pdfbox.pdmodel.font.PDType0Font;
-import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 
 public class DeckPdfCreator {
 
     private static DeckPdfCreator instance;
-    private PDType0Font robotoFont;
     private final Logger logger = LoggerFactory.getLogger(DeckPdfCreator.class);
 
     private DeckPdfCreator() {}
@@ -35,66 +33,75 @@ public class DeckPdfCreator {
         String filePath = tempDir.getAbsolutePath() + File.separator + "output.pdf";
         File pdfFile = new File(filePath);
 
-        try (PDDocument document = new PDDocument()) {
-            PDPage page = new PDPage();
-            document.addPage(page);
+        Document document = new Document(PageSize.A4, 42f, 40f, 36, 36);
 
-            initializeFont(document);
+        try {
+            PdfWriter.getInstance(document, new FileOutputStream(pdfFile));
+            document.open();
 
+            Font headerFont = loadFont("static/fonts/Roboto-Bold.ttf", 12);
+            Font textFont = loadFont("static/fonts/Roboto-Regular.ttf", 11);
 
-            try (PDPageContentStream contentStream = new PDPageContentStream(document, page)) {
-                createHeader(contentStream, deck);
-                createTable(contentStream, deck);
-            }
+            createHeader(document, deck, headerFont);
+            createTable(document, deck, textFont);
 
-            document.save(pdfFile);
+            document.close();
             logger.info("PDF file created at: " + filePath);
-        } catch (IOException e) {
+
+        } catch (DocumentException | IOException e) {
             logger.error("Error while creating PDF document: " + e.getMessage());
         }
 
         return pdfFile;
     }
 
-    // Method to initialize the font, if not already initialized
-    private void initializeFont(PDDocument document) {
-        if (robotoFont == null) {
-            try {
-                // Load font from the resources folder
-                ClassLoader classLoader = getClass().getClassLoader();
-                try (InputStream fontStream = classLoader.getResourceAsStream("static/fonts/Roboto-Regular.ttf")) {
-                    if (fontStream != null) {
-                        robotoFont = PDType0Font.load(document, fontStream);
-                    } else {
-                        logger.error("Font file not found in the specified path.");
-                    }
-                }
-            } catch (IOException e) {
-                logger.error("Error loading font: " + e.getMessage());
-            }
-        }
+    private Font loadFont(String fontPath, float size) throws IOException, DocumentException {
+        BaseFont baseFont = BaseFont.createFont(fontPath, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+        return new Font(baseFont, size);
     }
 
-    private void createHeader(PDPageContentStream contentStream, Deck deck) throws IOException {
-        contentStream.beginText();
-        contentStream.setFont(robotoFont, 14);
-        contentStream.newLineAtOffset(100, 750); // Position the text
-        contentStream.showText(deck.getName()); // Set the header text to the deck name
-        contentStream.endText();
+    private void createHeader(Document document, Deck deck, Font headerFont) throws DocumentException {
+        Paragraph header = new Paragraph(deck.getName(), headerFont);
+        header.setAlignment(Element.ALIGN_CENTER);
+
+        header.setSpacingBefore(0f);
+        header.setSpacingAfter(15f);
+
+        document.add(header);
     }
 
-    private void createTable(PDPageContentStream contentStream, Deck deck) throws IOException {
+    private void createTable(Document document, Deck deck, Font textFont) throws DocumentException {
+
+        PdfPTable table = new PdfPTable(3);
+        table.setWidthPercentage(100);
+        table.setWidths(new float[]{1f, 1f, 1f});
+
+        createTableHeader(table, textFont);
+
         for (Card card : deck.getCards()) {
-            contentStream.beginText();
-            contentStream.setFont(robotoFont, 12);
-            contentStream.newLineAtOffset(100, 720);
-            contentStream.showText(card.getFront());
-            contentStream.newLineAtOffset(0, -15); // Move to the next line
-            contentStream.showText(card.getBack());
-            contentStream.newLineAtOffset(0, -15); // Move to the next line
-            contentStream.showText(card.getExample());
-            contentStream.endText();
+            table.addCell(new PdfPCell(new Paragraph(card.getFront(), textFont)));
+            table.addCell(new PdfPCell(new Paragraph(card.getBack(), textFont)));
+            table.addCell(new PdfPCell(new Paragraph(card.getExample(), textFont)));
         }
 
+        document.add(table);
+    }
+
+    private void createTableHeader(PdfPTable table, Font textFont) {
+
+        PdfPCell cell;
+
+        cell = new PdfPCell(new Paragraph("Front", textFont));
+        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        table.addCell(cell);
+
+        cell = new PdfPCell(new Paragraph("Back", textFont));
+        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        table.addCell(cell);
+
+        cell = new PdfPCell(new Paragraph("Example", textFont));
+        cell.setHorizontalAlignment(Element.ALIGN_CENTER);
+
+        table.addCell(cell);
     }
 }
