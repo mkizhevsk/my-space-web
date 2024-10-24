@@ -74,7 +74,7 @@ public class DeckPdfCreator {
 
         PdfPTable table = new PdfPTable(3);
         table.setWidthPercentage(100);
-        table.setWidths(new float[]{1f, 1f, 1f});
+        table.setWidths(new float[]{30f, 30f, 40f});
 
         createTableHeader(table, textFont);
 
