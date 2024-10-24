@@ -56,11 +56,12 @@ public class CardController {
     }
 
     @GetMapping("/deleteCard/{deckId}/{cardId}")
-    public String deleteContact(@PathVariable int deckId, @PathVariable int cardId) {
+    public String deleteContact(@PathVariable int deckId, @PathVariable int cardId, RedirectAttributes redirectAttributes) {
 
         cardService.deleteCard(cardId);
 
-        return "redirect:/index";
+        redirectAttributes.addAttribute("deckId", deckId);
+        return "redirect:/cards/list/{deckId}";
     }
 
 }
